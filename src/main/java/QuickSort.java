@@ -1,32 +1,30 @@
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class QuickSort implements Sort {
-    List<Integer> originalList;
-
-    public QuickSort(List<Integer> originalList) {
-        this.originalList = originalList;
-    }
-
-    public void partition(List<Integer> originalList, int start, int end){
+public class QuickSort<T extends Comparable<T>> implements Sort<T> {
+    //副作用がある
+    private void partition(List<T> unsortedNumbersList, int start, int end){
         if(start < end) {
             int i = start; int j = end;
-            float pivot = originalList.get(end);
+            T pivot = unsortedNumbersList.get(end);
             while(true) {
-                while(originalList.get(i) < pivot && i < originalList.size()-1) i++;
-                while(pivot < originalList.get(j) && j > 1) j--;
+                while(unsortedNumbersList.get(i).compareTo(pivot) < 0 && i < unsortedNumbersList.size()-1) i++;
+                while(pivot.compareTo(unsortedNumbersList.get(j)) < 0 && j > 0) j--;
                 if(i >= j) break;
-                Collections.swap(originalList, i, j);
+                Collections.swap(unsortedNumbersList, i, j);
                 i++; j--;
             }
-            partition(originalList, start, i - 1);
-            partition(originalList, j + 1, end);
+            partition(unsortedNumbersList, start, i - 1);
+            partition(unsortedNumbersList, j + 1, end);
         }
     }
 
     @Override
-    public List<Integer> sort(){
-        partition(originalList, 0, originalList.size()-1);
-        return originalList;
+    public List<T> sort(Collection<T> unsortedNumbersCollection){
+        List<T> list = new ArrayList<>(unsortedNumbersCollection);
+        partition(list, 0, list.size()-1);
+        return list;
     }
 }

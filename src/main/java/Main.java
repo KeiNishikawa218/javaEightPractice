@@ -16,14 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Main {
     static List randomIntList(){
         Random random = new Random();
         List<Integer> randomIntList = new ArrayList<>();
 
-        for(int i = 0; i < 100; i++) {
+        for(int i = 0; i < 10; i++) {
             randomIntList.add(random.nextInt(1000));
         }
         return randomIntList;
@@ -35,37 +34,30 @@ public class Main {
 
         System.out.println("ソート前の配列です\n" + originalList + "\n");
 
+        //防御的コピー
+        //副作用を考える
         //クイックソート
-        {
-            System.out.println("クイックソートを実行します");
-            array[0] = new QuickSort(new ArrayList<Integer>(originalList));
-            System.out.println(array[0].sort() + "\n");
-        }
+        System.out.println("クイックソートを実行します");
+        array[0] = new QuickSort<Integer>();
+        System.out.println(array[0].sort(originalList) + "\n");
 
         //バブルソート
-        {
-            System.out.println("バブルソートを実行します");
-            array[1] = new BubbleSort(new ArrayList<Integer>(originalList));
-            System.out.println(array[1].sort() + "\n");
-        }
+        System.out.println("バブルソートを実行します");
+        array[1] = new BubbleSort<Integer>();
+        System.out.println(array[1].sort(originalList) + "\n");
 
         //ボゴソート
-        {
-            System.out.println("ボゴソートを実行します");
-            array[2] = new BogoSort(new ArrayList<Integer>(originalList));
-            array[2].sort();
-        }
+        System.out.println("ボゴソートを実行します");
+        array[2] = new BogoSort<Integer>();
+        array[2].sort(new ArrayList<>(originalList));
 
         //Stream API
-        {
-            System.out.println("Stream APIのソートを実行します");
-            List<Integer> sorted = originalList.stream()
-                    .sorted()
-                    .collect(Collectors.toList());
+        System.out.println("Stream APIのソートを実行します");
+        List<Integer> sorted = originalList.stream()
+                .sorted()
+                .collect(Collectors.toList());
 
-            System.out.println(sorted);
-        }
-
+        System.out.println(sorted);
     }
 }
 

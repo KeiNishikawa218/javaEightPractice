@@ -12,9 +12,8 @@ Stream API、lambda、関数型インタフェース、
 命令的　→　過程重視(過程も書かないといけない)
  */
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -30,30 +29,48 @@ public class Main {
 
     public static void main(String[] args) {
         Sort[] array = new Sort[3];
-        List<Integer> originalList = randomIntList();
+        List<Integer> unsortedNumbersList = randomIntList();
 
-        System.out.println("ソート前の配列です\n" + originalList + "\n");
+        System.out.println("ソート前の配列です\n" + unsortedNumbersList + "\n");
 
         //防御的コピー
         //副作用を考える
         //クイックソート
         System.out.println("クイックソートを実行します");
         array[0] = new QuickSort<Integer>();
-        System.out.println(array[0].sort(originalList) + "\n");
+        System.out.println(array[0].sort(unsortedNumbersList) + "\n");
 
         //バブルソート
         System.out.println("バブルソートを実行します");
         array[1] = new BubbleSort<Integer>();
-        System.out.println(array[1].sort(originalList) + "\n");
+        System.out.println(array[1].sort(unsortedNumbersList) + "\n");
 
         //ボゴソート
         System.out.println("ボゴソートを実行します");
         array[2] = new BogoSort<Integer>();
-        array[2].sort(new ArrayList<>(originalList));
+        array[2].sort(new ArrayList<>(unsortedNumbersList));
+
+
+        //ラムダ
+        Sort bogo = new Sort() {
+            @Override
+            public List sort(Collection unsortedNumbersCollection) {
+                System.out.println("bogo\n");
+                return null;
+            }
+        };
+
+        bogo.sort(new ArrayList<>(unsortedNumbersList));
 
         //Stream API
         System.out.println("Stream APIのソートを実行します");
-        List<Integer> sorted = originalList.stream()
+        List<Integer> sorted = unsortedNumbersList.stream()
+                .filter(new Predicate<Integer>() {
+                    @Override
+                    public boolean test(Integer number) {
+                        return Math.abs(number) >= 100;
+                    }
+                })
                 .sorted()
                 .collect(Collectors.toList());
 
